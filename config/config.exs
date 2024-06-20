@@ -8,11 +8,18 @@
 import Config
 
 config :lynx,
-  ash_domains: []
+  ash_domains: [
+    Lynx.ShortLinks
+  ]
 
 config :lynx,
   ecto_repos: [Lynx.Repo],
   generators: [timestamp_type: :utc_datetime]
+
+config :lynx, Lynx.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id],
+  migration_timestamps: [type: :utc_datetime_usec, default: {:fragment, "now()"}]
 
 # Configures the endpoint
 config :lynx, LynxWeb.Endpoint,
