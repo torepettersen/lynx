@@ -8,6 +8,9 @@
 import Config
 
 config :lynx,
+  ash_domains: []
+
+config :lynx,
   ecto_repos: [Lynx.Repo],
   generators: [timestamp_type: :utc_datetime]
 
@@ -30,6 +33,9 @@ config :lynx, LynxWeb.Endpoint,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :lynx, Lynx.Mailer, adapter: Swoosh.Adapters.Local
+
+# Ash
+config :ash, :custom_types, money: AshMoney.Types.Money
 
 # Configure esbuild (the version is required)
 config :esbuild,
