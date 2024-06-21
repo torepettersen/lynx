@@ -54,6 +54,8 @@ defmodule LynxWeb do
       use Phoenix.LiveView,
         layout: {LynxWeb.Layouts, :app}
 
+      import LynxWeb, only: [ok: 1, ok: 2, noreply: 1]
+
       unquote(html_helpers())
     end
   end
@@ -110,4 +112,8 @@ defmodule LynxWeb do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
+  def ok(socket), do: {:ok, socket}
+  def ok(socket, attrs), do: {:ok, socket, attrs}
+  def noreply(socket), do: {:noreply, socket}
 end
