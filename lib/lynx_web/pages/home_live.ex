@@ -24,11 +24,13 @@ defmodule LynxWeb.HomeLive do
   end
 
   @impl true
-  def handle_event("shorten_url", %{"url" => _url}, socket) do
-    # Ash.create(ShortLink, %{url: url})
-
-    socket
-    |> noreply()
+  def handle_event("shorten_url", %{"url" => url}, socket) do
+    case Ash.create(ShortLink, %{url: url}) do
+      {:ok, short_link} ->
+        socket
+        |> push_navigate(to: ~p"/short-link/#{short_link}")
+        |> noreply()
+    end
   end
 
   def navbar(assigns) do

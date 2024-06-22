@@ -18,6 +18,8 @@ defmodule LynxWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
+    live "/short-link", ShortLinkLive
+    live "/short-link/:id", ShortLinkLive
   end
 
   # Other scopes may use custom stacks.

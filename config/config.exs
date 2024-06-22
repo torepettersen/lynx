@@ -44,6 +44,9 @@ config :lynx, Lynx.Mailer, adapter: Swoosh.Adapters.Local
 # Ash
 config :ash, :custom_types, money: AshMoney.Types.Money
 
+# Tails
+config :tails, colors_file: Path.join(File.cwd!(), "assets/tailwind.colors.json")
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

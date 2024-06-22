@@ -86,14 +86,21 @@ defmodule LynxWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import LynxWeb.CoreComponents
       import LynxWeb.Gettext
+      unquote(ui())
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
+    end
+  end
+
+  def ui do
+    quote do
+      import SaladUI.Button
+      import SaladUI.Input
     end
   end
 
