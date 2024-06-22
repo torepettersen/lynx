@@ -15,7 +15,19 @@ defmodule LynxWeb.ShortLinkLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.button>Hei</.button>
+    <.card class="max-w-lg">
+      <.card_header>
+        <.card_title class="text-lg text-primary hover:text-primary/80">
+          <.link href={"https://pnt.li/#{@short_link.code}"}>pnt.li/<%= @short_link.code %></.link>
+        </.card_title>
+        <.card_description><%= @short_link.url %></.card_description>
+      </.card_header>
+      <.card_footer class="flex justify-start space-x-4">
+        <.button phx-click={JS.dispatch("phx:copy")} value={"pnt.li/#{@short_link.code}"}>
+          Copy
+        </.button>
+      </.card_footer>
+    </.card>
     """
   end
 end

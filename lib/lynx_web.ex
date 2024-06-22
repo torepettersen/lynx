@@ -100,7 +100,9 @@ defmodule LynxWeb do
   def ui do
     quote do
       import SaladUI.Button
+      import SaladUI.Card
       import SaladUI.Input
+      import SaladUI.Label
     end
   end
 
