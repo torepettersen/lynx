@@ -24,8 +24,8 @@ defmodule LynxWeb.HomeLive do
   end
 
   @impl true
-  def handle_event("shorten_url", %{"url" => url}, socket) do
-    case Ash.create(ShortLink, %{url: url}) do
+  def handle_event("shorten_url", %{"target_url" => target_url}, socket) do
+    case Ash.create(ShortLink, %{target_url: target_url}) do
       {:ok, short_link} ->
         socket
         |> push_navigate(to: ~p"/short-link/#{short_link}")
@@ -185,7 +185,7 @@ defmodule LynxWeb.HomeLive do
             Simply paste your link, hit the button, and get a short link and QR code instantly!
           </p>
           <.form for={@form} class="mt-10 max-w-xl mx-auto" phx-submit="shorten_url">
-            <.input field={@form[:url]} placeholder="Link to shorten" />
+            <.input field={@form[:targe_url]} placeholder="Link to shorten" />
             <div class="flex items-center justify-center gap-x-6 mt-4">
               <button class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Shorten URL

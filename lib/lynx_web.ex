@@ -101,8 +101,9 @@ defmodule LynxWeb do
     quote do
       import FoxWeb.Button
       import SaladUI.Card
-      import SaladUI.Input
+      # import SaladUI.Input
       import SaladUI.Label
+      import LynxWeb.CoreComponents, only: [input: 1]
     end
   end
 

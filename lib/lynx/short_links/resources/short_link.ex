@@ -7,7 +7,7 @@ defmodule Lynx.ShortLinks.ShortLink do
   alias Uniq.UUID
 
   actions do
-    default_accept [:url, :code]
+    default_accept [:target_url, :code]
     defaults [:read, :update, :destroy]
 
     create :create do
@@ -22,11 +22,16 @@ defmodule Lynx.ShortLinks.ShortLink do
 
     attribute :active, :boolean, allow_nil?: false, default: true
     attribute :code, :string, allow_nil?: false
-    attribute :url, :string, allow_nil?: false
+    attribute :target_url, :string, allow_nil?: false
 
     attribute :last_used, :date
 
     timestamps()
+  end
+
+  calculations do
+    calculate :full_url, :string, expr("https://pnt.li/" <> code)
+    calculate :display_url, :string, expr("pnt.li/" <> code)
   end
 
   identities do

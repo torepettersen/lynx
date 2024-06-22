@@ -5,10 +5,10 @@ defmodule LynxWeb.ShortLinkLive do
 
   @impl true
   def mount(%{"id" => id} = _params, _session, socket) do
-    short_link = Ash.get!(ShortLink, id)
+    short_link = Ash.get!(ShortLink, id) |> Ash.load!([:display_url, :full_url])
 
     qr_code =
-      "https://pnt.li/#{short_link.code}"
+      short_link.full_url
       |> QRCodeEx.encode()
       |> QRCodeEx.svg(width: 100)
 
@@ -25,9 +25,9 @@ defmodule LynxWeb.ShortLinkLive do
       <.card_header class="flex flex-row justify-between pb-0 space-y-0">
         <div class="space-y-1.5">
           <.card_title class="text-lg text-primary hover:text-primary/80">
-            <.link href={"https://pnt.li/#{@short_link.code}"}>pnt.li/<%= @short_link.code %></.link>
+            <.link href={@short_link.full_url}><%= @short_link.display_url %></.link>
           </.card_title>
-          <.card_description><%= @short_link.url %></.card_description>
+          <.card_description><%= @short_link.target_url %></.card_description>
         </div>
         <div class="">
           <%= raw(@qr_code) %>
@@ -35,7 +35,7 @@ defmodule LynxWeb.ShortLinkLive do
       </.card_header>
       <.card_content></.card_content>
       <.card_footer class="flex justify-start space-x-4">
-        <.button phx-click={JS.dispatch("phx:copy")} value={"pnt.li/#{@short_link.code}"}>
+        <.button phx-click={JS.dispatch("phx:copy")} value={@short_link.display_url}>
           Copy
         </.button>
         <.link class={button_variants(%{variant: "outline"})} href={~p"/qr-code/#{@short_link.id}"}>
