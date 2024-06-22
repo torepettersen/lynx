@@ -99,7 +99,7 @@ defmodule LynxWeb do
 
   def ui do
     quote do
-      import SaladUI.Button
+      import FoxWeb.Button
       import SaladUI.Card
       import SaladUI.Input
       import SaladUI.Label

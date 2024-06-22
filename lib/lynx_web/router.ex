@@ -20,6 +20,7 @@ defmodule LynxWeb.Router do
     live "/", HomeLive
     live "/short-link", ShortLinkLive
     live "/short-link/:id", ShortLinkLive
+    get "/qr-code/:id", QRCodeController, :qr_code
   end
 
   # Other scopes may use custom stacks.
