@@ -6,6 +6,9 @@ defmodule Lynx.ShortLinks.ShortLink do
   alias Lynx.ShortLinks.Changes.GenerateCode
   alias Uniq.UUID
 
+  @host Application.compile_env!(:lynx, :host)
+  @host_scheme Application.compile_env!(:lynx, :host_scheme)
+
   actions do
     default_accept [:target_url, :code]
     defaults [:read, :update, :destroy]
@@ -30,8 +33,8 @@ defmodule Lynx.ShortLinks.ShortLink do
   end
 
   calculations do
-    calculate :full_url, :string, expr("https://pnt.li/" <> code)
-    calculate :display_url, :string, expr("pnt.li/" <> code)
+    calculate :full_url, :string, expr("#{@host_scheme}://#{@host}/" <> code)
+    calculate :display_url, :string, expr("#{@host}/" <> code)
   end
 
   identities do

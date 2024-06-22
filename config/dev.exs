@@ -1,5 +1,9 @@
 import Config
 
+config :lynx,
+  host: "localhost:4000",
+  host_scheme: "http"
+
 # Configure your database
 config :lynx, Lynx.Repo,
   username: "postgres",

@@ -14,13 +14,20 @@ defmodule LynxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", LynxWeb do
+  scope "/", LynxWeb, host: "app." do
     pipe_through :browser
 
     live "/", HomeLive
     live "/short-link", ShortLinkLive
     live "/short-link/:id", ShortLinkLive
     get "/qr-code/:id", QRCodeController, :qr_code
+  end
+
+  scope "/", LynxWeb do
+    pipe_through :browser
+
+    get "/", RedirectController, :index
+    get "/:code", RedirectController, :index
   end
 
   # Other scopes may use custom stacks.
