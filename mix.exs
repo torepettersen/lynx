@@ -61,6 +61,7 @@ defmodule Lynx.MixProject do
       {:phoenix_live_view, "~> 1.0.0-rc.1", override: true},
       {:postgrex, ">= 0.0.0"},
       {:qrcode_ex, "~> 0.1"},
+      {:req, "~> 0.5"},
       # {:salad_ui, "~> 0.5"},
       {:salad_ui, github: "bluzky/salad_ui"},
       {:swoosh, "~> 1.5"},
