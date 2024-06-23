@@ -87,6 +87,7 @@ defmodule LynxWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import LynxWeb.Gettext
+      import Tails, only: [classes: 1]
       unquote(ui())
 
       # Shortcut for generating JS commands

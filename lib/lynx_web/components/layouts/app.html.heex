@@ -1,7 +1,18 @@
 <div class="flex min-h-screen w-full flex-col bg-muted">
-  <!-- <aside class="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex"> -->
-  <!-- </aside> -->
-  <main class="p-4 sm:px-6">
-    <%= @inner_content %>
-  </main>
+  <header class="bg-white  shadow">
+    <nav class="max-w-5xl flex px-6 py-4 mx-auto">
+      <div class="flex space-x-4">
+        <.link class={classes([button_variants(%{variant: "link"}), "px-0"])}>Links</.link>
+      </div>
+      <div class="flex ml-auto space-x-4">
+        <.button variant="outline">Sign in</.button>
+        <.button>Sign up</.button>
+      </div>
+    </nav>
+  </header>
+  <div class="max-w-5xl w-full mx-auto">
+    <main class="px-6 py-10">
+      <%= @inner_content %>
+    </main>
+  </div>
 </div>
