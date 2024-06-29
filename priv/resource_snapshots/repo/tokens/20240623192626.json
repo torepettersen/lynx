@@ -1,66 +1,6 @@
 {
   "attributes": [
     {
-      "default": "nil",
-      "size": null,
-      "type": "uuid",
-      "source": "id",
-      "references": null,
-      "allow_nil?": false,
-      "generated?": false,
-      "primary_key?": true
-    },
-    {
-      "default": "true",
-      "size": null,
-      "type": "boolean",
-      "source": "active",
-      "references": null,
-      "allow_nil?": false,
-      "generated?": false,
-      "primary_key?": false
-    },
-    {
-      "default": "nil",
-      "size": null,
-      "type": "text",
-      "source": "code",
-      "references": null,
-      "allow_nil?": false,
-      "generated?": false,
-      "primary_key?": false
-    },
-    {
-      "default": "nil",
-      "size": null,
-      "type": "text",
-      "source": "target_url",
-      "references": null,
-      "allow_nil?": false,
-      "generated?": false,
-      "primary_key?": false
-    },
-    {
-      "default": "nil",
-      "size": null,
-      "type": "date",
-      "source": "last_used",
-      "references": null,
-      "allow_nil?": true,
-      "generated?": false,
-      "primary_key?": false
-    },
-    {
-      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
-      "size": null,
-      "type": "utc_datetime_usec",
-      "source": "inserted_at",
-      "references": null,
-      "allow_nil?": false,
-      "generated?": false,
-      "primary_key?": false
-    },
-    {
       "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
       "size": null,
       "type": "utc_datetime_usec",
@@ -69,27 +9,72 @@
       "allow_nil?": false,
       "generated?": false,
       "primary_key?": false
-    }
-  ],
-  "table": "short_links",
-  "hash": "5946AB3F9F4F512BB7FC8F4AAEF0C58BD44AB411A6F3DEA4999C1C2EF86B5741",
-  "repo": "Elixir.Lynx.Repo",
-  "identities": [
+    },
     {
-      "name": "unique_code",
-      "keys": [
-        {
-          "type": "atom",
-          "value": "code"
-        }
-      ],
-      "where": null,
-      "nils_distinct?": true,
-      "all_tenants?": false,
-      "index_name": "short_links_unique_code_index",
-      "base_filter": null
+      "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+      "size": null,
+      "type": "utc_datetime_usec",
+      "source": "created_at",
+      "references": null,
+      "allow_nil?": false,
+      "generated?": false,
+      "primary_key?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "map",
+      "source": "extra_data",
+      "references": null,
+      "allow_nil?": true,
+      "generated?": false,
+      "primary_key?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "purpose",
+      "references": null,
+      "allow_nil?": false,
+      "generated?": false,
+      "primary_key?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "utc_datetime",
+      "source": "expires_at",
+      "references": null,
+      "allow_nil?": false,
+      "generated?": false,
+      "primary_key?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "subject",
+      "references": null,
+      "allow_nil?": false,
+      "generated?": false,
+      "primary_key?": false
+    },
+    {
+      "default": "nil",
+      "size": null,
+      "type": "text",
+      "source": "jti",
+      "references": null,
+      "allow_nil?": false,
+      "generated?": false,
+      "primary_key?": true
     }
   ],
+  "table": "tokens",
+  "hash": "A449B4CAD896A1DC3E8375CA9FC834DEFAD3296DD708BB564D7E573263663E2F",
+  "repo": "Elixir.Lynx.Repo",
+  "identities": [],
   "schema": null,
   "multitenancy": {
     "global": null,
@@ -102,4 +87,3 @@
   "custom_statements": [],
   "has_create_action": true
 }
-

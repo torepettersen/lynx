@@ -34,6 +34,8 @@ defmodule Lynx.MixProject do
     [
       # TODO bump on release to {:phoenix_live_view, "~> 1.0.0"},
       {:ash, "~> 3.0"},
+      {:ash_authentication, "~> 4.0"},
+      {:ash_authentication_phoenix, "~> 2.0"},
       {:ash_postgres, "~> 2.0"},
       {:ash_money, "~> 0.1"},
       {:bandit, "~> 1.5"},
@@ -62,11 +64,11 @@ defmodule Lynx.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:qrcode_ex, "~> 0.1"},
       {:req, "~> 0.5"},
-      # {:salad_ui, "~> 0.5"},
-      {:salad_ui, github: "bluzky/salad_ui"},
+      {:salad_ui, "~> 0.5"},
       {:swoosh, "~> 1.5"},
       {:tails, "~> 0.1"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:tailwind_formatter, "~> 0.4.0", only: [:dev, :test], runtime: false},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:uniq, "~> 0.6"}

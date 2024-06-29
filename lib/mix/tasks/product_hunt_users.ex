@@ -20,7 +20,7 @@ defmodule Mix.Tasks.ProductHuntUsers do
           users
       end
 
-    {twitter, users} = split_by_kind(users, "twitter")
+    {_twitter, _users} = split_by_kind(users, "twitter")
   end
 
   defp split_by_kind(users, kind) do

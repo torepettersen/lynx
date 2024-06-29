@@ -11,6 +11,7 @@ module.exports = {
     "../lib/lynx_web.ex",
     "../lib/lynx_web/**/*.*ex",
     "../deps/salad_ui/lib/**/*.ex",
+    "../deps/ash_authentication_phoenix/**/*.*ex",
   ],
   theme: {
     extend: {

@@ -12,10 +12,8 @@ defmodule Lynx.Application do
       Lynx.Repo,
       {DNSCluster, query: Application.get_env(:lynx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Lynx.PubSub},
-      # Start the Finch HTTP client for sending emails
       {Finch, name: Lynx.Finch},
-      # Start a worker by calling: Lynx.Worker.start_link(arg)
-      # {Lynx.Worker, arg},
+      {AshAuthentication.Supervisor, otp_app: :lynx},
       # Start to serve requests, typically the last entry
       LynxWeb.Endpoint
     ]

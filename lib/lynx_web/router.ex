@@ -1,6 +1,8 @@
 defmodule LynxWeb.Router do
   use LynxWeb, :router
 
+  use AshAuthentication.Phoenix.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,19 +10,39 @@ defmodule LynxWeb.Router do
     plug :put_root_layout, html: {LynxWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :load_from_session
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :load_from_bearer
   end
 
   scope "/", LynxWeb, host: "app." do
     pipe_through :browser
 
-    live "/", HomeLive
-    live "/short-link", ShortLinkLive
-    live "/short-link/:id", ShortLinkLive
-    get "/qr-code/:id", QRCodeController, :qr_code
+    ash_authentication_live_session :home,
+      on_mount: {LynxWeb.LiveUserAuth, :user_optional} do
+      live "/", HomeLive
+    end
+
+    ash_authentication_live_session :app,
+      on_mount: {LynxWeb.LiveUserAuth, :user_optional} do
+      live "/short-link", ShortLinkLive
+      live "/short-link/:id", ShortLinkLive
+
+      get "/qr-code/:id", QRCodeController, :qr_code
+    end
+
+    ash_authentication_live_session :auth,
+      layout: false,
+      on_mount: {LynxWeb.LiveUserAuth, :no_user} do
+      live "/sign-in", SignInLive, :sign_in
+      live "/register", SignInLive, :register
+    end
+
+    sign_out_route AuthController
+    auth_routes_for Lynx.Accounts.User, to: AuthController
   end
 
   scope "/", LynxWeb do

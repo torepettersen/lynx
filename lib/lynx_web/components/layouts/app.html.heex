@@ -5,8 +5,16 @@
         <.link class={classes([button_variants(%{variant: "link"}), "px-0"])}>Links</.link>
       </div>
       <div class="flex ml-auto space-x-4">
-        <.button variant="outline">Sign in</.button>
-        <.button>Sign up</.button>
+        <%= if assigns[:current_user] do %>
+          <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-out"}>
+            Sign out
+          </.link>
+        <% else %>
+          <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-in"}>
+            Sign in
+          </.link>
+          <.link class={button_variants(%{})} href={~p"/register"}>Sign up</.link>
+        <% end %>
       </div>
     </nav>
   </header>

@@ -9,6 +9,7 @@ import Config
 
 config :lynx,
   ash_domains: [
+    Lynx.Accounts,
     Lynx.ShortLinks
   ]
 
