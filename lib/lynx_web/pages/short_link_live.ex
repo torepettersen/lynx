@@ -35,9 +35,7 @@ defmodule LynxWeb.ShortLinkLive do
       </.card_header>
       <.card_content></.card_content>
       <.card_footer class="flex justify-start space-x-4">
-        <.button phx-click={JS.dispatch("phx:copy")} value={@short_link.display_url}>
-          Copy
-        </.button>
+        <.copy_to_clipboard class={button_variants()} value={@short_link.display_url} />
         <.link class={button_variants(%{variant: "outline"})} href={~p"/qr-code/#{@short_link.id}"}>
           Download QR Code
         </.link>

@@ -1,10 +1,15 @@
-<div class="flex min-h-screen w-full flex-col bg-muted">
-  <header class="bg-white  shadow">
-    <nav class="max-w-5xl flex px-6 py-4 mx-auto">
+<div class="bg-muted flex min-h-screen w-full flex-col">
+  <header class="bg-white shadow">
+    <nav class="mx-auto flex max-w-5xl px-6 py-4">
       <div class="flex space-x-4">
-        <.link class={classes([button_variants(%{variant: "link"}), "px-0"])}>Links</.link>
+        <.link
+          navigate={~p"/short-links"}
+          class={classes([button_variants(%{variant: "link"}), "px-0"])}
+        >
+          Links
+        </.link>
       </div>
-      <div class="flex ml-auto space-x-4">
+      <div class="ml-auto flex space-x-4">
         <%= if assigns[:current_user] do %>
           <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-out"}>
             Sign out
@@ -18,7 +23,7 @@
       </div>
     </nav>
   </header>
-  <div class="max-w-5xl w-full mx-auto">
+  <div class="mx-auto w-full max-w-5xl">
     <main class="px-6 py-10">
       <%= @inner_content %>
     </main>

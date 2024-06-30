@@ -58,7 +58,7 @@ defmodule FoxWeb.Button do
     size: "default"
   }
 
-  def button_variants(props) do
+  def button_variants(props \\ %{}) do
     variants = Map.take(props, ~w(variant size)a)
     variants = Map.merge(@default_variants, variants)
 

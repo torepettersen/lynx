@@ -45,11 +45,17 @@ liveSocket.connect();
 window.liveSocket = liveSocket;
 
 window.addEventListener("phx:copy", (event) => {
-  let text = event.target.value;
+  let text = event.target.getAttribute("value");
   navigator.clipboard.writeText(text).then(() => {
-    event.target.textContent = "Copied!";
+    let copyText = event.target.querySelector(".copy-text");
+    let copiedText = event.target.querySelector(".copied-text");
+
+    copyText.classList.add("hidden");
+    copiedText.classList.remove("hidden");
+
     setTimeout(() => {
-      event.target.textContent = "Copy";
+      copyText.classList.remove("hidden");
+      copiedText.classList.add("hidden");
     }, 2500);
   });
 });

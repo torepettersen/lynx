@@ -28,6 +28,7 @@ defmodule LynxWeb.Router do
 
     ash_authentication_live_session :app,
       on_mount: {LynxWeb.LiveUserAuth, :user_optional} do
+      live "/short-links", ShortLinksLive
       live "/short-link", ShortLinkLive
       live "/short-link/:id", ShortLinkLive
 
