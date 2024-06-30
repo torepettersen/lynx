@@ -9,7 +9,18 @@ defmodule LynxWeb.ShortLinksLive do
 
     socket
     |> assign(short_links: short_links)
+    |> assign(form: to_form(%{}))
     |> ok()
+  end
+
+  @impl true
+  def handle_event("shorten_url", %{"target_url" => target_url}, socket) do
+    case Ash.create(ShortLink, %{target_url: target_url}) do
+      {:ok, short_link} ->
+        socket
+        |> push_navigate(to: ~p"/short-link/#{short_link}")
+        |> noreply()
+    end
   end
 
   @impl true
@@ -28,7 +39,12 @@ defmodule LynxWeb.ShortLinksLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.card>
+    <.form for={@form} phx-submit="shorten_url">
+      <.input_with_button class="max-w-lg" placeholder="URL" field={@form[:target_url]}>
+        Shorten
+      </.input_with_button>
+    </.form>
+    <.card class="mt-4">
       <.table>
         <.table_header>
           <.table_row>

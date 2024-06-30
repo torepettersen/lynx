@@ -1,7 +1,7 @@
-defmodule FoxWeb.ButtonGroup do
+defmodule LynxWeb.ButtonGroup do
   use Phoenix.Component
   import Tails, only: [classes: 1]
-  import FoxWeb.Button
+  import LynxWeb.Button
 
   attr :class, :string, default: nil
   slot :inner_block, required: true

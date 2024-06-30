@@ -1,4 +1,4 @@
-defmodule FoxWeb.Button do
+defmodule LynxWeb.Button do
   @moduledoc false
   use SaladUI, :component
 

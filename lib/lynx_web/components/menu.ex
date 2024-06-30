@@ -1,4 +1,4 @@
-defmodule FoxWeb.Menu do
+defmodule LynxWeb.Menu do
   @moduledoc """
   Implement menu components
   """

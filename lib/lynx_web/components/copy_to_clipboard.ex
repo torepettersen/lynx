@@ -1,4 +1,4 @@
-defmodule FoxWeb.CopyToClipboard do
+defmodule LynxWeb.CopyToClipboard do
   use Phoenix.Component
   alias Phoenix.LiveView.JS
 

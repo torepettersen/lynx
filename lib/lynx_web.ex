@@ -100,10 +100,11 @@ defmodule LynxWeb do
 
   def ui do
     quote do
-      import FoxWeb.Button
-      import FoxWeb.ButtonGroup
-      import FoxWeb.CopyToClipboard
-      import FoxWeb.Menu
+      import LynxWeb.Button
+      import LynxWeb.ButtonGroup
+      import LynxWeb.InputWithButton
+      import LynxWeb.CopyToClipboard
+      import LynxWeb.Menu
       import SaladUI.Card
       import SaladUI.DropdownMenu
       import SaladUI.Label

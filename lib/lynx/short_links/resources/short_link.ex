@@ -11,7 +11,12 @@ defmodule Lynx.ShortLinks.ShortLink do
 
   actions do
     default_accept [:target_url, :code]
-    defaults [:read, :update, :destroy]
+    defaults [:update, :destroy]
+
+    read :read do
+      primary? true
+      prepare build(sort: [inserted_at: :desc])
+    end
 
     create :create do
       primary? true
