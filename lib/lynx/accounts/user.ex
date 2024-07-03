@@ -13,6 +13,10 @@ defmodule Lynx.Accounts.User do
     timestamps()
   end
 
+  actions do
+    defaults [:read]
+  end
+
   authentication do
     strategies do
       password :password do

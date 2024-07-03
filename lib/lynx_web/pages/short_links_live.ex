@@ -5,7 +5,7 @@ defmodule LynxWeb.ShortLinksLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    short_links = Ash.read!(ShortLink, load: [:display_url, :full_url])
+    short_links = ShortLink.read!(actor: actor(socket))
 
     socket
     |> assign(short_links: short_links)
@@ -15,7 +15,7 @@ defmodule LynxWeb.ShortLinksLive do
 
   @impl true
   def handle_event("shorten_url", %{"target_url" => target_url}, socket) do
-    case Ash.create(ShortLink, %{target_url: target_url}) do
+    case Ash.create(ShortLink, %{target_url: target_url}, actor: actor(socket)) do
       {:ok, short_link} ->
         socket
         |> push_navigate(to: ~p"/short-link/#{short_link}")
@@ -29,7 +29,7 @@ defmodule LynxWeb.ShortLinksLive do
     |> Enum.find(&(&1.id == id))
     |> Ash.destroy!()
 
-    short_links = Ash.read!(ShortLink, load: [:display_url, :full_url])
+    short_links = ShortLink.read!(actor: actor(socket))
 
     socket
     |> assign(short_links: short_links)

@@ -8,6 +8,8 @@ defmodule Lynx.Repo.Migrations.CreateShortLinks do
       add :target_url, :text, null: false
       add :last_used, :date
 
+      add :owner_id, references(:users, on_delete: :delete_all)
+
       timestamps()
     end
 

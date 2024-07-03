@@ -54,7 +54,7 @@ defmodule LynxWeb do
       use Phoenix.LiveView,
         layout: {LynxWeb.Layouts, :app}
 
-      import LynxWeb, only: [ok: 1, ok: 2, noreply: 1]
+      import LynxWeb, only: [ok: 1, ok: 2, noreply: 1, actor: 1]
 
       unquote(html_helpers())
     end
@@ -132,4 +132,5 @@ defmodule LynxWeb do
   def ok(socket), do: {:ok, socket}
   def ok(socket, attrs), do: {:ok, socket, attrs}
   def noreply(socket), do: {:noreply, socket}
+  def actor(socket), do: socket.assigns.current_user
 end
