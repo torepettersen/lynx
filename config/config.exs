@@ -45,7 +45,7 @@ config :lynx, Lynx.Mailer, adapter: Swoosh.Adapters.Local
 # Ash
 config :ash,
   custom_types: [money: AshMoney.Types.Money],
-  policies: [hide_private?: true]
+  policies: [private_fields: :include]
 
 # Tails
 config :tails, colors_file: Path.join(File.cwd!(), "assets/tailwind.colors.json")

@@ -41,24 +41,22 @@ defmodule Lynx.ShortLinks.ShortLink do
   attributes do
     uuid_primary_key :id, default: &UUID.uuid7/0
 
-    attribute :active, :boolean, allow_nil?: false, default: true, public?: true
-    attribute :code, :string, allow_nil?: false, public?: true
-    attribute :target_url, :string, allow_nil?: false, public?: true
+    attribute :active, :boolean, allow_nil?: false, default: true
+    attribute :code, :string, allow_nil?: false
+    attribute :target_url, :string, allow_nil?: false
 
-    attribute :last_used, :date, public?: true
+    attribute :last_used, :date
 
-    timestamps public?: true
+    timestamps()
   end
 
   relationships do
-    belongs_to :owner, User do
-      public? true
-    end
+    belongs_to :owner, User
   end
 
   calculations do
-    calculate :full_url, :string, expr("#{@host_scheme}://#{@host}/" <> code), public?: true
-    calculate :display_url, :string, expr("#{@host}/" <> code), public?: true
+    calculate :full_url, :string, expr("#{@host_scheme}://#{@host}/" <> code)
+    calculate :display_url, :string, expr("#{@host}/" <> code)
   end
 
   identities do
@@ -80,6 +78,8 @@ defmodule Lynx.ShortLinks.ShortLink do
   end
 
   field_policies do
+    private_fields :include
+
     field_policy_bypass [:active, :code, :target_url] do
       authorize_if always()
     end
