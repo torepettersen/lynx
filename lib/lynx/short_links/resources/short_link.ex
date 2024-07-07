@@ -41,22 +41,24 @@ defmodule Lynx.ShortLinks.ShortLink do
   attributes do
     uuid_primary_key :id, default: &UUID.uuid7/0
 
-    attribute :active, :boolean, allow_nil?: false, default: true
-    attribute :code, :string, allow_nil?: false
-    attribute :target_url, :string, allow_nil?: false
+    attribute :active, :boolean, allow_nil?: false, default: true, public?: true
+    attribute :code, :string, allow_nil?: false, public?: true
+    attribute :target_url, :string, allow_nil?: false, public?: true
 
-    attribute :last_used, :date
+    attribute :last_used, :date, public?: true
 
-    timestamps()
+    timestamps public?: true
   end
 
   relationships do
-    belongs_to :owner, User
+    belongs_to :owner, User do
+      public? true
+    end
   end
 
   calculations do
-    calculate :full_url, :string, expr("#{@host_scheme}://#{@host}/" <> code)
-    calculate :display_url, :string, expr("#{@host}/" <> code)
+    calculate :full_url, :string, expr("#{@host_scheme}://#{@host}/" <> code), public?: true
+    calculate :display_url, :string, expr("#{@host}/" <> code), public?: true
   end
 
   identities do
@@ -64,16 +66,26 @@ defmodule Lynx.ShortLinks.ShortLink do
   end
 
   policies do
+    bypass action(:by_code) do
+      authorize_if always()
+    end
+
     policy action_type([:read, :update, :destroy]) do
       authorize_if relates_to_actor_via(:owner)
     end
 
-    policy action_type([:create]) do
+    policy action_type(:create) do
+      authorize_if always()
+    end
+  end
+
+  field_policies do
+    field_policy_bypass [:active, :code, :target_url] do
       authorize_if always()
     end
 
-    bypass action(:by_code) do
-      authorize_if always()
+    field_policy [:owner_id, :last_used, :inserted_at, :updated_at, :full_url, :display_url] do
+      authorize_if relates_to_actor_via(:owner)
     end
   end
 
