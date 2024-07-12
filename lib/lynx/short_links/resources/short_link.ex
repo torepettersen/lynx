@@ -4,6 +4,7 @@ defmodule Lynx.ShortLinks.ShortLink do
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer]
 
+  import Lynx.Validations
   alias Lynx.Accounts.User
   alias Lynx.ShortLinks.Changes.GenerateCode
   alias Uniq.UUID
@@ -18,7 +19,7 @@ defmodule Lynx.ShortLinks.ShortLink do
   end
 
   actions do
-    default_accept [:target_url, :code]
+    default_accept [:target_url]
     defaults [:update, :destroy]
 
     read :read do
@@ -35,6 +36,8 @@ defmodule Lynx.ShortLinks.ShortLink do
 
       change relate_actor(:owner, allow_nil?: true)
       change GenerateCode
+
+      validate is_url?(:target_url)
     end
   end
 

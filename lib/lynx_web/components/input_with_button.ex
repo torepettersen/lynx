@@ -2,7 +2,7 @@ defmodule LynxWeb.InputWithButton do
   use Phoenix.Component
   import Tails, only: [classes: 1]
   import LynxWeb.Button
-  import LynxWeb.CoreComponents, only: [translate_error: 1]
+  import LynxWeb.CoreComponents, only: [translate_error: 1, error: 1]
 
   attr :id, :any, default: nil
   attr :class, :string, default: nil
@@ -24,24 +24,27 @@ defmodule LynxWeb.InputWithButton do
       |> assign_new(:value, fn -> field.value end)
 
     ~H"""
-    <div class={classes(["flex rounded-lg shadow", @class])}>
-      <input
-        type="text"
-        name={@name}
-        id={@id}
-        value={Phoenix.HTML.Form.normalize_value("text", @value)}
-        class={
-          classes([
-            "block w-full rounded-l-lg border-r-0 text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-            @errors == [] && "border-zinc-300 focus:border-zinc-400",
-            @errors != [] && "border-rose-400 focus:border-rose-400"
-          ])
-        }
-        {@rest}
-      />
-      <.button class="h-auto rounded-r-lg">
-        <%= render_slot(@inner_block) %>
-      </.button>
+    <div class={classes(["flex flex-col", @class])}>
+      <div class="flex w-full rounded-lg shadow">
+        <input
+          type="text"
+          name={@name}
+          id={@id}
+          value={Phoenix.HTML.Form.normalize_value("text", @value)}
+          class={
+            classes([
+              "block w-full rounded-l-lg border-r-0 text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+              @errors == [] && "border-zinc-300 focus:border-zinc-400",
+              @errors != [] && "border-rose-400 focus:border-rose-400"
+            ])
+          }
+          {@rest}
+        />
+        <.button class="h-auto rounded-r-lg">
+          <%= render_slot(@inner_block) %>
+        </.button>
+      </div>
+      <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """
   end

@@ -2,23 +2,33 @@ defmodule LynxWeb.ShortLinksLive do
   use LynxWeb, :live_view
 
   alias Lynx.ShortLinks.ShortLink
+  alias AshPhoenix.Form
 
   @impl true
   def mount(_params, _session, socket) do
     short_links = ShortLink.read!(actor: actor(socket))
 
+    form = Form.for_create(ShortLink, :create, actor: actor(socket)) |> to_form()
+
     socket
     |> assign(short_links: short_links)
-    |> assign(form: to_form(%{}))
+    |> assign(form: form)
     |> ok()
   end
 
   @impl true
-  def handle_event("shorten_url", %{"target_url" => target_url}, socket) do
-    case Ash.create(ShortLink, %{target_url: target_url}, actor: actor(socket)) do
+  def handle_event("shorten_url", %{"form" => params}, socket) do
+    dbg(params)
+
+    case Form.submit(socket.assigns.form, params: params) do
       {:ok, short_link} ->
         socket
         |> push_navigate(to: ~p"/short-link/#{short_link}")
+        |> noreply()
+
+      {:error, form} ->
+        socket
+        |> assign(form: form)
         |> noreply()
     end
   end
