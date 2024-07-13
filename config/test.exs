@@ -23,6 +23,9 @@ config :lynx, LynxWeb.Endpoint,
 # In test we don't send emails
 config :lynx, Lynx.Mailer, adapter: Swoosh.Adapters.Test
 
+# Oban
+config :lynx, Oban, testing: :inline
+
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 

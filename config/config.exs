@@ -18,8 +18,8 @@ config :lynx,
   generators: [timestamp_type: :utc_datetime]
 
 config :lynx, Lynx.Repo,
-  migration_primary_key: [type: :binary_id],
-  migration_foreign_key: [type: :binary_id],
+  migration_primary_key: [type: :uuid, default: {:fragment, "uuid_generate_v7()"}],
+  migration_foreign_key: [type: :uuid],
   migration_timestamps: [type: :utc_datetime_usec, default: {:fragment, "now()"}]
 
 # Configures the endpoint
@@ -49,6 +49,13 @@ config :ash,
 
 # Tails
 config :tails, colors_file: Path.join(File.cwd!(), "assets/tailwind.colors.json")
+
+# Oban
+config :lynx, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [default: 10],
+  plugins: [{Oban.Plugins.Cron, []}],
+  repo: Lynx.Repo
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -82,4 +89,5 @@ config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+import_config "config.secret.exs"
 import_config "#{config_env()}.exs"

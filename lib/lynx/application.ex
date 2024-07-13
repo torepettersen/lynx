@@ -7,6 +7,8 @@ defmodule Lynx.Application do
 
   @impl true
   def start(_type, _args) do
+    ash_domains = Application.fetch_env!(:lynx, :ash_domains)
+
     children = [
       LynxWeb.Telemetry,
       Lynx.Repo,
@@ -14,6 +16,7 @@ defmodule Lynx.Application do
       {Phoenix.PubSub, name: Lynx.PubSub},
       {Finch, name: Lynx.Finch},
       {AshAuthentication.Supervisor, otp_app: :lynx},
+      {Oban, AshOban.config(ash_domains, Application.fetch_env!(:lynx, Oban))},
       # Start to serve requests, typically the last entry
       LynxWeb.Endpoint
     ]

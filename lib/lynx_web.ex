@@ -105,10 +105,12 @@ defmodule LynxWeb do
       import LynxWeb.InputWithButton
       import LynxWeb.CopyToClipboard
       import LynxWeb.Menu
+      import SaladUI.Badge
       import SaladUI.Card
       import SaladUI.DropdownMenu
       import SaladUI.Label
       import SaladUI.Table
+      import SaladUI.Tooltip
       import LynxWeb.CoreComponents, only: [input: 1, icon: 1]
     end
   end

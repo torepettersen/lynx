@@ -3,10 +3,12 @@ defmodule Lynx.Repo.Migrations.CreateShortLinks do
 
   def change do
     create table(:short_links) do
-      add :active, :boolean, null: false, default: true
+      add :state, :text, null: false, default: "active"
       add :code, :text, null: false
       add :target_url, :text, null: false
       add :last_used, :date
+      add :risk_score, :integer
+      add :tags, {:array, :text}
 
       add :owner_id, references(:users, on_delete: :delete_all)
 

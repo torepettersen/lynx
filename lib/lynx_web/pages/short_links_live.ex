@@ -59,6 +59,7 @@ defmodule LynxWeb.ShortLinksLive do
         <.table_header>
           <.table_row>
             <.table_head class="min-w-56">Short link</.table_head>
+            <.table_head>Status</.table_head>
             <.table_head>Target link</.table_head>
             <.table_head class="text-right min-w-36">Action</.table_head>
           </.table_row>
@@ -67,6 +68,17 @@ defmodule LynxWeb.ShortLinksLive do
           <.table_row :for={short_link <- @short_links}>
             <.table_cell>
               <.link href={short_link.full_url}><%= short_link.display_url %></.link>
+            </.table_cell>
+            <.table_cell>
+              <div class="flex">
+                <%= short_link.state %>
+                <.tooltip :if={short_link.state == :blocked} class="ml-1 flex items-center">
+                  <.icon name="hero-information-circle-micro" />
+                  <.tooltip_content class="bg-black text-white">
+                    <.unsafe_messages short_link={short_link} />
+                  </.tooltip_content>
+                </.tooltip>
+              </div>
             </.table_cell>
             <.table_cell class="truncate max-w-md">
               <.link href={short_link.target_url}><%= short_link.target_url %></.link>
@@ -114,6 +126,30 @@ defmodule LynxWeb.ShortLinksLive do
     </.card>
     """
   end
+
+  defp unsafe_messages(%{short_link: %{tags: tags}} = assigns) do
+    case unsafe_message(tags) do
+      [_ | _] = messages ->
+        assigns = assign(assigns, :messages, messages)
+
+        ~H"""
+        <ul>
+          <li :for={message <- @messages}><%= message %></li>
+        </ul>
+        """
+
+      _ ->
+        ~H"This link has be flagged as unsafe"
+    end
+  end
+
+  defp unsafe_message(tags) when is_list(tags),
+    do: Enum.map(tags, &unsafe_message/1) |> Enum.reject(&is_nil/1)
+
+  defp unsafe_message(:adult), do: "- This link has been flagged as adult content"
+  defp unsafe_message(:malware), do: "- This link has been flagged as malware"
+  defp unsafe_message(:phishing), do: "- This link has been flagged as phishing"
+  defp unsafe_message(_), do: nil
 
   defp toggle(js \\ %JS{}, id) do
     JS.toggle_attribute(js, {"data-state", "open", "closed"}, to: "#dropdown-#{id}")

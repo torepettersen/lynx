@@ -2,12 +2,14 @@ defmodule Lynx.ShortLinks.ShortLink do
   use Ash.Resource,
     domain: Lynx.ShortLinks,
     data_layer: AshPostgres.DataLayer,
-    authorizers: [Ash.Policy.Authorizer]
+    authorizers: [Ash.Policy.Authorizer],
+    extensions: [AshOban]
 
   import Lynx.Validations
   alias Lynx.Accounts.User
   alias Lynx.ShortLinks.Changes.GenerateCode
-  alias Uniq.UUID
+  alias Lynx.ShortLinks.Changes.GetRiskScore
+  alias Lynx.ShortLinks.Changes.MaybeBlock
 
   @host Application.compile_env!(:lynx, :host)
   @host_scheme Application.compile_env!(:lynx, :host_scheme)
@@ -27,6 +29,8 @@ defmodule Lynx.ShortLinks.ShortLink do
 
       prepare build(sort: [inserted_at: :desc])
       prepare build(load: [:display_url, :full_url])
+
+      pagination keyset?: true, required?: false
     end
 
     read :by_code
@@ -39,16 +43,40 @@ defmodule Lynx.ShortLinks.ShortLink do
 
       validate is_url?(:target_url)
     end
+
+    update :check_link do
+      require_atomic? false
+      change GetRiskScore
+      change MaybeBlock
+    end
   end
 
   attributes do
-    uuid_primary_key :id, default: &UUID.uuid7/0
+    uuid_v7_primary_key :id
 
-    attribute :active, :boolean, allow_nil?: false, default: true
+    attribute :state, :atom do
+      constraints one_of: [:active, :inactive, :blocked]
+    end
+
     attribute :code, :string, allow_nil?: false
     attribute :target_url, :string, allow_nil?: false
-
     attribute :last_used, :date
+    attribute :risk_score, :integer
+
+    attribute :tags, {:array, :atom} do
+      constraints items: [
+                    one_of: [
+                      :phishing,
+                      :malware,
+                      :suspicious,
+                      :parking,
+                      :spamming,
+                      :adult,
+                      :risky_tld,
+                      :short_link_redirect
+                    ]
+                  ]
+    end
 
     timestamps()
   end
@@ -66,7 +94,22 @@ defmodule Lynx.ShortLinks.ShortLink do
     identity :unique_code, [:code]
   end
 
+  oban do
+    triggers do
+      trigger :check_link do
+        queue(:default)
+        action :check_link
+        where expr(is_nil(risk_score))
+        scheduler_cron("* * * * *")
+      end
+    end
+  end
+
   policies do
+    bypass AshOban.Checks.AshObanInteraction do
+      authorize_if always()
+    end
+
     bypass action(:by_code) do
       authorize_if always()
     end
@@ -81,14 +124,22 @@ defmodule Lynx.ShortLinks.ShortLink do
   end
 
   field_policies do
-    private_fields :include
-
-    field_policy_bypass [:active, :code, :target_url] do
+    field_policy_bypass [:state, :code, :target_url] do
       authorize_if always()
     end
 
-    field_policy [:owner_id, :last_used, :inserted_at, :updated_at, :full_url, :display_url] do
+    field_policy [
+      :owner_id,
+      :last_used,
+      :tags,
+      :risk_score,
+      :inserted_at,
+      :updated_at,
+      :full_url,
+      :display_url
+    ] do
       authorize_if relates_to_actor_via(:owner)
+      authorize_if AshOban.Checks.AshObanInteraction
     end
   end
 

@@ -37,8 +37,9 @@ defmodule Lynx.MixProject do
       {:ash, github: "torepettersen/ash", branch: "field-policy-hide-public", override: true},
       {:ash_authentication, "~> 4.0"},
       {:ash_authentication_phoenix, "~> 2.0"},
-      {:ash_postgres, "~> 2.0"},
       {:ash_money, "~> 0.1"},
+      {:ash_oban, "~> 0.2"},
+      {:ash_postgres, "~> 2.1"},
       {:bandit, "~> 1.5"},
       {:dns_cluster, "~> 0.1.1"},
       {:ecto_sql, "~> 3.10"},
@@ -56,6 +57,7 @@ defmodule Lynx.MixProject do
        compile: false,
        depth: 1},
       {:jason, "~> 1.2"},
+      {:oban, "~> 2.17"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
@@ -72,8 +74,7 @@ defmodule Lynx.MixProject do
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:tailwind_formatter, "~> 0.4.0", only: [:dev, :test], runtime: false},
       {:telemetry_metrics, "~> 1.0"},
-      {:telemetry_poller, "~> 1.0"},
-      {:uniq, "~> 0.6"}
+      {:telemetry_poller, "~> 1.0"}
     ]
   end
 
