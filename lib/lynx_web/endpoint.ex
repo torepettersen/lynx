@@ -8,7 +8,8 @@ defmodule LynxWeb.Endpoint do
     store: :cookie,
     key: "_lynx_key",
     signing_salt: "FD9Y1aCY",
-    same_site: "Lax"
+    same_site: "Lax",
+    max_age: :timer.hours(24) * 30
   ]
 
   socket "/live", Phoenix.LiveView.Socket,

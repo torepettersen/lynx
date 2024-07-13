@@ -22,12 +22,13 @@ defmodule Lynx.Accounts.User do
       password :password do
         identity_field :email
       end
+    end
 
-      tokens do
-        enabled? true
-        token_resource Lynx.Accounts.Token
-        signing_secret Lynx.Accounts.Secrets
-      end
+    tokens do
+      enabled? true
+      token_lifetime {30, :days}
+      token_resource Lynx.Accounts.Token
+      signing_secret Lynx.Accounts.Secrets
     end
   end
 

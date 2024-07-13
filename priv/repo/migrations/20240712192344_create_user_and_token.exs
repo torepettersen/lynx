@@ -18,7 +18,7 @@ defmodule Lynx.Repo.Migrations.CreateUserAndToken do
       add :expires_at, :utc_datetime, null: false
       add :subject, :text, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
   end
 end
