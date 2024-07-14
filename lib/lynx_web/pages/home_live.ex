@@ -1,12 +1,17 @@
 defmodule LynxWeb.HomeLive do
   use LynxWeb, :live_view
 
+  alias Lynx.Accounts.AnonymousUser
+  alias Lynx.Accounts.User
   alias Lynx.ShortLinks.ShortLink
+  alias AshPhoenix.Form
 
   @impl true
   def mount(_params, _session, socket) do
+    form = Form.for_create(ShortLink, :create, actor: actor(socket)) |> to_form()
+
     socket
-    |> assign(form: to_form(%{}))
+    |> assign(form: form)
     |> ok(layout: false)
   end
 
@@ -24,8 +29,8 @@ defmodule LynxWeb.HomeLive do
   end
 
   @impl true
-  def handle_event("shorten_url", %{"target_url" => target_url}, socket) do
-    case Ash.create(ShortLink, %{target_url: target_url}) do
+  def handle_event("shorten_url", %{"form" => params}, socket) do
+    case Form.submit(socket.assigns.form, params: params) do
       {:ok, short_link} ->
         socket
         |> push_navigate(to: ~p"/short-link/#{short_link}")
@@ -76,17 +81,18 @@ defmodule LynxWeb.HomeLive do
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Company</a>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6">
-        <%= if @current_user do %>
-          <.link navigate={~p"/sign-out"} class="text-sm font-semibold leading-6 text-gray-900">
-            Sign out
-          </.link>
-        <% else %>
-          <.link navigate={~p"/register"} class="text-sm font-semibold leading-6 text-gray-900">
-            Sign up
-          </.link>
-          <.link navigate={~p"/sign-in"} class="text-sm font-semibold leading-6 text-gray-900">
-            Sign in
-          </.link>
+        <%= case @current_user do %>
+          <% %User{} -> %>
+            <.link navigate={~p"/sign-out"} class="text-sm font-semibold leading-6 text-gray-900">
+              Sign out
+            </.link>
+          <% %AnonymousUser{} -> %>
+            <.link navigate={~p"/register"} class="text-sm font-semibold leading-6 text-gray-900">
+              Sign up
+            </.link>
+            <.link navigate={~p"/sign-in"} class="text-sm font-semibold leading-6 text-gray-900">
+              Sign in
+            </.link>
         <% end %>
       </div>
     </nav>

@@ -11,6 +11,7 @@ defmodule LynxWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :load_from_session
+    plug LynxWeb.Plugs.PutSessionId
   end
 
   pipeline :api do

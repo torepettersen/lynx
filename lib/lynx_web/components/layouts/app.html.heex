@@ -10,15 +10,16 @@
         </.link>
       </div>
       <div class="ml-auto flex space-x-4">
-        <%= if assigns[:current_user] do %>
-          <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-out"}>
-            Sign out
-          </.link>
-        <% else %>
-          <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-in"}>
-            Sign in
-          </.link>
-          <.link class={button_variants(%{})} href={~p"/register"}>Sign up</.link>
+        <%= case assigns[:current_user] do %>
+          <% %Lynx.Accounts.User{} -> %>
+            <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-out"}>
+              Sign out
+            </.link>
+          <% %Lynx.Accounts.AnonymousUser{} -> %>
+            <.link class={button_variants(%{variant: "outline"})} href={~p"/sign-in"}>
+              Sign in
+            </.link>
+            <.link class={button_variants(%{})} href={~p"/register"}>Sign up</.link>
         <% end %>
       </div>
     </nav>

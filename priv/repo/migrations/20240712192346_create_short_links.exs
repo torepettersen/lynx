@@ -10,11 +10,17 @@ defmodule Lynx.Repo.Migrations.CreateShortLinks do
       add :risk_score, :integer
       add :tags, {:array, :text}
 
-      add :owner_id, references(:users, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :session_id, :uuid
 
       timestamps()
     end
 
     create unique_index(:short_links, [:code], name: "short_links_unique_code_index")
+
+    create constraint(:short_links, :one_of_user_id_or_session_id,
+             check:
+               "(user_id IS NOT NULL AND session_id IS NULL) OR (user_id IS NULL AND session_id IS NOT NULL)"
+           )
   end
 end

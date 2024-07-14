@@ -6,10 +6,12 @@ defmodule Lynx.ShortLinks.ShortLink do
     extensions: [AshOban]
 
   import Lynx.Validations
+  alias Lynx.Accounts.AnonymousUser
   alias Lynx.Accounts.User
   alias Lynx.ShortLinks.Changes.GenerateCode
   alias Lynx.ShortLinks.Changes.GetRiskScore
   alias Lynx.ShortLinks.Changes.MaybeBlock
+  alias Lynx.ShortLinks.Changes.SetOwner
 
   @host Application.compile_env!(:lynx, :host)
   @host_scheme Application.compile_env!(:lynx, :host_scheme)
@@ -28,7 +30,6 @@ defmodule Lynx.ShortLinks.ShortLink do
       primary? true
 
       prepare build(sort: [inserted_at: :desc])
-      prepare build(load: [:display_url, :full_url])
 
       pagination keyset?: true, required?: false
     end
@@ -38,7 +39,7 @@ defmodule Lynx.ShortLinks.ShortLink do
     create :create do
       primary? true
 
-      change relate_actor(:owner, allow_nil?: true)
+      change SetOwner
       change GenerateCode
 
       validate is_url?(:target_url)
@@ -78,11 +79,17 @@ defmodule Lynx.ShortLinks.ShortLink do
                   ]
     end
 
+    attribute :session_id, :uuid
+
     timestamps()
   end
 
   relationships do
-    belongs_to :owner, User
+    belongs_to :user, User
+
+    belongs_to :anonymous_user, AnonymousUser do
+      source_attribute :session_id
+    end
   end
 
   calculations do
@@ -115,7 +122,8 @@ defmodule Lynx.ShortLinks.ShortLink do
     end
 
     policy action_type([:read, :update, :destroy]) do
-      authorize_if relates_to_actor_via(:owner)
+      authorize_if relates_to_actor_via(:user)
+      authorize_if expr(session_id == ^actor(:id))
     end
 
     policy action_type(:create) do
@@ -129,7 +137,8 @@ defmodule Lynx.ShortLinks.ShortLink do
     end
 
     field_policy [
-      :owner_id,
+      :user_id,
+      :session_id,
       :last_used,
       :tags,
       :risk_score,
@@ -138,7 +147,8 @@ defmodule Lynx.ShortLinks.ShortLink do
       :full_url,
       :display_url
     ] do
-      authorize_if relates_to_actor_via(:owner)
+      authorize_if relates_to_actor_via(:user)
+      authorize_if expr(session_id == ^actor(:id))
       authorize_if AshOban.Checks.AshObanInteraction
     end
   end

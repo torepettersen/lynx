@@ -6,7 +6,7 @@ defmodule LynxWeb.ShortLinksLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    short_links = ShortLink.read!(actor: actor(socket))
+    short_links = ShortLink.read!(actor: actor(socket), load: [:display_url, :full_url])
 
     form = Form.for_create(ShortLink, :create, actor: actor(socket)) |> to_form()
 
@@ -18,8 +18,6 @@ defmodule LynxWeb.ShortLinksLive do
 
   @impl true
   def handle_event("shorten_url", %{"form" => params}, socket) do
-    dbg(params)
-
     case Form.submit(socket.assigns.form, params: params) do
       {:ok, short_link} ->
         socket
@@ -39,7 +37,7 @@ defmodule LynxWeb.ShortLinksLive do
     |> Enum.find(&(&1.id == id))
     |> Ash.destroy!()
 
-    short_links = ShortLink.read!(actor: actor(socket))
+    short_links = ShortLink.read!(actor: actor(socket), load: [:display_url, :display_url])
 
     socket
     |> assign(short_links: short_links)

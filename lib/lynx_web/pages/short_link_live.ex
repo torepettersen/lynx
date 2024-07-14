@@ -5,7 +5,7 @@ defmodule LynxWeb.ShortLinkLive do
 
   @impl true
   def mount(%{"id" => id} = _params, _session, socket) do
-    short_link = Ash.get!(ShortLink, id, actor: actor(socket))
+    short_link = Ash.get!(ShortLink, id, actor: actor(socket), load: [:display_url, :full_url])
 
     qr_code =
       short_link.full_url

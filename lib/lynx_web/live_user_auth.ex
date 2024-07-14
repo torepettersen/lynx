@@ -7,9 +7,13 @@ defmodule LynxWeb.LiveUserAuth do
   import Phoenix.Component
   import Phoenix.LiveView
   alias Lynx.Accounts.User
+  alias Lynx.Accounts.AnonymousUser
 
-  def on_mount(:user_optional, _params, _session, socket) do
-    {:cont, assign_new(socket, :current_user, fn -> nil end)}
+  def on_mount(:user_optional, _params, %{"session_id" => session_id}, socket) do
+    case socket.assigns[:current_user] do
+      %User{} -> {:cont, socket}
+      nil -> {:cont, assign(socket, :current_user, AnonymousUser.create!(%{id: session_id}))}
+    end
   end
 
   def on_mount(:user_required, _params, _session, socket) do
@@ -19,10 +23,10 @@ defmodule LynxWeb.LiveUserAuth do
     end
   end
 
-  def on_mount(:no_user, _params, _session, socket) do
+  def on_mount(:no_user, _params, %{"session_id" => session_id}, socket) do
     case socket.assigns[:current_user] do
       %User{} -> {:halt, redirect(socket, to: ~p"/")}
-      nil -> {:cont, assign(socket, :current_user, nil)}
+      nil -> {:cont, assign(socket, :current_user, AnonymousUser.create!(%{id: session_id}))}
     end
   end
 end
