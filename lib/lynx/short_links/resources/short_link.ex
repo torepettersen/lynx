@@ -45,6 +45,11 @@ defmodule Lynx.ShortLinks.ShortLink do
       validate is_url?(:target_url)
     end
 
+    update :move_to_user do
+      accept [:user_id]
+      change set_attribute(:session_id, nil)
+    end
+
     update :check_link do
       require_atomic? false
       change GetRiskScore
@@ -104,10 +109,10 @@ defmodule Lynx.ShortLinks.ShortLink do
   oban do
     triggers do
       trigger :check_link do
-        queue(:default)
+        queue :default
         action :check_link
         where expr(is_nil(risk_score))
-        scheduler_cron("* * * * *")
+        scheduler_cron "* * * * *"
       end
     end
   end
